@@ -5,7 +5,12 @@ import math
 
 def activation(x):
     # Sigmoid
-    return 1/(1 + math.exp(-x))
+    if x >= 0:
+        z = exp(-x)
+        return 1 / (1 + z)
+    else:
+        z = exp(x)
+        return z / (1 + z)
 
 def matrixAdd(n, b):
     token = list()
@@ -44,15 +49,17 @@ class NeuralNetwrok (object):
         hidden = hidden + self.bias_h
         # hidden = matrixAdd(hidden, self.bias_h)
         # Getting the activation value for the hidden layer
-        for i in range((size(hidden, 0) - 1)):
-                hidden[i] = activation(hidden[i])
+        for i in range((size(hidden, 0))):
+            print(i)
+            hidden[i] = activation(hidden[i])
 
         hidden = matrix.transpose(hidden)
         output = dot(self.weights_ho, hidden)
         output = output + self.bias_o
         # Getting the activation value for the output layer
         for i in range((size(output,0))):
-                output[i] = activation(output[i])
+            print("this")
+            output[i] = activation(output[i])
 
         # Sending it back to the caller
         return output
