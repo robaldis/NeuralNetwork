@@ -46,20 +46,26 @@ class NeuralNetwrok (object):
     def feedForward(self, input):
 
         hidden = dot(self.weights_ih, input)
+        # hidden = asmatrix([hidden])
+        print (hidden)
+        print (self.bias_h)
         hidden = hidden + self.bias_h
         # hidden = matrixAdd(hidden, self.bias_h)
         # Getting the activation value for the hidden layer
         for i in range((size(hidden, 0))):
-            print(i)
-            hidden[i] = activation(hidden[i])
+            for j in range(size(hidden, 1)):
+                hidden[i][j] = activation(hidden[i][j])
 
         hidden = matrix.transpose(hidden)
         output = dot(self.weights_ho, hidden)
+        print (output)
+        output = matrix.transpose(output)
+        print  (self.bias_o)
         output = output + self.bias_o
         # Getting the activation value for the output layer
-        for i in range((size(output,0))):
-            print("this")
-            output[i] = activation(output[i])
+        for i in range(size(output,0)):
+            for j in range(size(output, 1)):
+                output[i][j] = activation(output[i][j])
 
         # Sending it back to the caller
         return output
