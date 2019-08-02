@@ -12,13 +12,6 @@ def activation(x):
         z = exp(x)
         return z / (1 + z)
 
-def matrixAdd(n, b):
-    token = list()
-    for i in range(size(b,0)):
-        n[i] += b[i]
-    return n
-
-
 
 class NeuralNetwrok (object):
 
@@ -30,6 +23,7 @@ class NeuralNetwrok (object):
         # Make the weights between the input and hidden and hidden and output
         self.weights_ih = ndarray(shape = (self.hidden_nodes, self.input_nodes))
         self.weights_ho = ndarray(shape = (self.output_nodes, self.hidden_nodes))
+
         # randomise the weights
         self.weights_ih = self.randomWeights(self.weights_ih)
         self.weights_ho = self.randomWeights(self.weights_ho)
@@ -42,26 +36,25 @@ class NeuralNetwrok (object):
         self.bias_o = matrix.transpose(self.bias_o)
 
 
-
     def feedForward(self, input):
 
+        # Add up the hidden weights with the inputs
         hidden = dot(self.weights_ih, input)
-        # hidden = asmatrix([hidden])
-        print (hidden)
-        print (self.bias_h)
+        # Adding the bias for the hidden layer
         hidden = hidden + self.bias_h
-        # hidden = matrixAdd(hidden, self.bias_h)
+        hidden = matrix.transpose(hidden)
+
         # Getting the activation value for the hidden layer
         for i in range((size(hidden, 0))):
             for j in range(size(hidden, 1)):
                 hidden[i][j] = activation(hidden[i][j])
 
-        hidden = matrix.transpose(hidden)
+        # Adding up the weights with the hidden layer
         output = dot(self.weights_ho, hidden)
-        print (output)
         output = matrix.transpose(output)
-        print  (self.bias_o)
+        # Adding the bias for the output layer
         output = output + self.bias_o
+
         # Getting the activation value for the output layer
         for i in range(size(output,0)):
             for j in range(size(output, 1)):
@@ -69,6 +62,7 @@ class NeuralNetwrok (object):
 
         # Sending it back to the caller
         return output
+
 
     def randomWeights(self, n):
         for i in range(size(n, 0)):
