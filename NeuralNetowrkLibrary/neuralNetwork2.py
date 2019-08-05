@@ -4,10 +4,15 @@ import math
 import scipy.special
 
 
-def matrixAdd(a, b):
-    for i in range((size(a, 0))):
-        for j in range(size(a, 1)):
-            a[i][j] += b[i][j]
+def activation(x):
+    # Sigmoid
+    if x >= 0:
+        z = exp(-x)
+        return 1 / (1 + z)
+    else:
+        z = exp(x)
+        return z / (1 + z)
+
 
 class NeuralNetwrok (object):
 
@@ -28,9 +33,6 @@ class NeuralNetwrok (object):
         self.bias_o = ndarray(shape = (self.output_nodes, 1))
         self.bias_h = self.randomWeights(self.bias_h)
         self.bias_o = self.randomWeights(self.bias_o)
-        # self.bias_h = matrix.transpose(self.bias_h)
-        # self.bias_o = matrix.transpose(self.bias_o)
-
 
         # activation function is the sigmoid function
         self.activation_function = lambda x: scipy.special.expit(x)
@@ -38,25 +40,35 @@ class NeuralNetwrok (object):
         pass
 
 
-    def feedForward(self, inputArray):
-        # convert inputs list to 2d array
-        input = array(inputArray, ndmin=2).T
+    def feedForward(self, input):
+          # Add up the hidden weights with the inputs
+        hidden = dot(self.weights_ih, input)
+        # Adding the bias for the hidden layer
+        # hidden = hidden + self.bias_h
 
-        # Calculate singnals into the hidden layer
-        hiddenInput = dot(self.weights_ih, input)
-        hiddenInput = hiddenInput + self.bias_h
-        hiddenOutput = self.activation_function(hiddenInput)
-        # hiddenOutput = matrix.transpose(hiddenOutput)
+        hidden = self.activation_function(hidden)
+
+        # # Getting the activation value for the hidden layer
+        # for i in range((size(hidden, 0))):
+        #     for j in range(size(hidden, 1)):
+        #         hidden[i][j] = activation(hidden[i][j])
 
 
-        # Calclate signals into the final layer
-        finalInput = dot(self.weights_ho, hiddenOutput)
-        finalInput = finalInput + self.bias_o
-        finalOutput = self.activation_function(finalInput)
+        # Adding up the weights with the hidden layer
+        output = dot(self.weights_ho, hidden)
+        # Adding the bias for the output layer
+        # output = output + self.bias_o
 
+        output = self.activation_function(output)
+
+
+        #     # Getting the activation value for the output layer
+        # for i in range(size(output,0)):
+        #     for j in range(size(output, 1)):
+        #         output[i][j] = activation(output[i][j])
 
         # Sending it back to the caller
-        return finalOutput
+        return output
 
 
     def randomWeights(self, n):

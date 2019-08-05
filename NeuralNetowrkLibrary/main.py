@@ -4,9 +4,9 @@ from numpy import *
 
 def main():
 
-    input = array([1,0,1,0])
+    input = [1,0,1,0]
 
-    brain = nn.NeuralNetwrok(4,4,2)
+    brain = nn.NeuralNetwrok(4,5,6)
     output = brain.feedForward(input)
     print (output)
 
