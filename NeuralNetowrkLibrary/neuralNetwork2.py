@@ -40,24 +40,25 @@ class NeuralNetwrok (object):
         pass
 
 
-    def feedForward(self, input):
-          # Add up the hidden weights with the inputs
+    def feedForward(self, inputArray):
+        input = array(inputArray, ndmin=2).T
+
+        # Add up the hidden weights with the inputs
         hidden = dot(self.weights_ih, input)
         # Adding the bias for the hidden layer
-        # hidden = hidden + self.bias_h
-
+        hidden = hidden + self.bias_h
         hidden = self.activation_function(hidden)
 
-        # # Getting the activation value for the hidden layer
-        # for i in range((size(hidden, 0))):
-        #     for j in range(size(hidden, 1)):
-        #         hidden[i][j] = activation(hidden[i][j])
+        # Getting the activation value for the hidden layer
+        for i in range((size(hidden, 0))):
+            for j in range(size(hidden, 1)):
+                hidden[i][j] = activation(hidden[i][j])
 
 
         # Adding up the weights with the hidden layer
         output = dot(self.weights_ho, hidden)
         # Adding the bias for the output layer
-        # output = output + self.bias_o
+        output = output + self.bias_o
 
         output = self.activation_function(output)
 

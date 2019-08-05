@@ -1,4 +1,4 @@
-import neuralNetwork as nn
+import neuralNetwork2 as nn
 from numpy import *
 
 
