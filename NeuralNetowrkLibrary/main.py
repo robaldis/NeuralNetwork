@@ -5,13 +5,11 @@ from time import time, localtime, ctime
 
 
 def main():
-    brain = nn.NeuralNetwrok(2,2,1, 0.1)
+    brain = nn.NeuralNetwrok(2, 2, 1, 0.1)
 
 
-
-
-    input = [1,0],[0,1],[0,0],[1,1]
-    target = [1],[1],[0],[0]
+    input =     [1,0],  [0,1],  [0,0],  [1,1]
+    target =    [1],    [1],    [0],    [0]
 
     startTime = time()
 
