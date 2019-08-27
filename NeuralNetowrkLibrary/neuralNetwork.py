@@ -104,15 +104,15 @@ class NeuralNetwrok (object):
         # Change the bias with the gradiant
         self.bias_o += outputGradiants
 
+
+
+
         # Calculate the hidden layer errors
         who_T = np.matrix.transpose(self.weights_ho)
-        print (self.weights_ho)
-        print (outputErrors)
         hiddenErrors = who_T * outputErrors
 
         # Hidden layer gradiant
         hiddenGradiants = hiddenOutput * ( 1 - hiddenOutput)
-        print (hiddenGradiants)
         hiddenGradiants = hiddenGradiants * hiddenErrors
         hiddenGradiants = hiddenGradiants * self.lr
 

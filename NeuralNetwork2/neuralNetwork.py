@@ -16,113 +16,180 @@ def sigmoid_prime(z):
 class NeuralNetwork():
 
     def __init__(self, layer_sizes):
-        # Setting up the size of the weight matrix for each layer
-        weight_sizes = [(a,b) for a,b in zip(layer_sizes[1:], layer_sizes[:-1])] # 1: - everything but the first item.    :-1 everthing but the last value
-        # Setup the weights from the weight size
-        # the numbers  are random
-        self.weights = [np.random.standard_normal(s)/s[1]**.5 for s in weight_sizes]
+        weight_shape = [(a,b) for a,b in zip(layer_sizes[1:], layer_sizes[:-1])]
+        self.weights = [np.random.standard_normal(s)/s[1]**.5 for s in weight_shape]
         self.biases = [np.zeros((s,1)) for s in layer_sizes[1:]]
-        self.weights_output = [np.array((s,1)) for s in layer_sizes[1:]]
+
+        self.weights_output = []#[np.zeros((s,1)) for s in layer_sizes[1:]]
+
 
         self.lr = 0.1
 
         self.num_layers = len(layer_sizes)
 
-        self.activation = lambda x : 1/(1+np.exp(-x))
+        self.activation_function = lambda x : 1/(1+np.exp(-x))
 
 
-    def cost_derivative(self, output_activations, y):
-        #"""Return the vector of partial derivatives \partial C_x /
-        #\partial a for the output activations."""
-        return (output_activations-y)
-
-    def predict(self, a, training = False):
+    def predict(self, a, target = None, training = False):
+        self.weights_output.append(a)
         i = 0
         for w,b in zip(self.weights, self.biases):
-            self.weights_output[i] = a = self.activation(np.matmul(w,a) + b)
+            #self.weights_output.append(a)
+            a = self.activation_function(np.matmul(w,a) + b)
+            self.weights_output.append(a)
+            
             i += 1
 
+        #for i in self.weights_output:
+        #    print (f"{i}\nOUTPUT\n")
         return a
 
-    def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None):
-        """Train the neural network using mini-batch stochastic
-        gradient descent.  The ``training_data`` is a list of tuples
-        ``(x, y)`` representing the training inputs and the desired
-        outputs.  The other non-optional parameters are
-        self-explanatory.  If ``test_data`` is provided then the
-        network will be evaluated against the test data after each
-        epoch, and partial progress printed out.  This is useful for
-        tracking progress, but slows things down substantially."""
-        if test_data: n_test = len(test_data)
-        n = len(training_data)
-        for j in range(epochs):
-            random.shuffle(training_data)
-            mini_batches = [training_data[k:k+mini_batch_size]
-                for k in range(0, n, mini_batch_size)]
-            for mini_batch in mini_batches:
-                self.update_mini_batch(mini_batch, eta)
-            if test_data:
-                print ("Epoch {0}: {1} / {2}".format(j, self.evaluate(test_data), n_test))
+    def train(self,inputArray , targetArray):
+
+        self.predict(inputArray)
+
+        #weights_ih = self.weights[0]
+        #weights_ho = self.weights[1]
+
+        #bias_o = self.biases[1]
+        #bias_h = self.biases[0]
+
+        #finalOutputs = self.weights_output[1]
+        #hiddenOutput = self.weights_output[0]
+
+        
+        #target_T = np.array(targetArray, ndmin=2).T
+
+        ## Calculate the errors for the output layer
+        #outputErrors = target - finalOutputs
+        #outputGradiants = finalOutputs * (1- finalOutputs)
+        #outputGradiants = outputGradiants * outputErrors
+        #outputGradiants = outputGradiants * self.lr
+
+        #hidden_T = np.matrix.transpose(hiddenOutput)
+
+        #weights_ho += outputGradiants * hiddenOutput
+        #bias_o += outputGradiants
+
+        ## Calculate the hidden layer errors
+        #who_T = np.matrix.transpose(weights_ho)
+        #print (weights_ho)
+        #print (outputErrors)
+        #hiddenErrors = who_T * outputErrors
+
+        ## Hidden layer gradiant
+        #hiddenGradiants = hiddenOutputs * ( 1 - hiddenOutput)
+        #hiddenGradiants = hiddenGradiants * hiddenErrors
+        #hiddenGradiants = hiddenGradiants * self.lr
+
+        ## Calculate deltas
+        #input_t = np.matrix.transpose(target)
+        #weights_ih_deltas = hiddenGradiants * input_t
+
+        ## change the weights by the deltas
+        #self.weights_ih += weights_ih_deltas
+        ## Change the bias with the gradiant
+        #self.bias_h += hiddenGradiants
+
+
+
+        #-----------------------------------------------
+
+
+
+        ## convert inputs list to 2d array
+        #input = np.array(inputArray, ndmin=2).T
+
+        ## Calculate singnals into the hidden layer
+        #hiddenInput = np.dot(weights_ih, input)
+        #hiddenInput = hiddenInput + bias_h
+        #hiddenOutput = self.activation_function(hiddenInput)
+        ## hiddenOutput = matrix.transpose(hiddenOutput)
+
+        ## Calclate signals into the final layer
+        #finalInputs = np.dot(weights_ho, hiddenOutput)
+        #finalInputs = finalInputs + bias_o
+        #finalOutputs = self.activation_function(finalInputs)
+
+        #target = np.array(targetArray, ndmin=2).T
+
+        ## Calculate the errors for the output layer
+        #outputErrors = target - finalOutputs
+        #outputGradiants = finalOutputs * (1- finalOutputs)
+        #outputGradiants = outputGradiants * outputErrors
+        #outputGradiants = outputGradiants * self.lr
+
+        ## Calclate deltas
+        #hidden_T = np.matrix.transpose(hiddenOutput)
+        #weights_ho_deltas = outputGradiants * hidden_T
+
+        ## Change the weights by the deltas
+        #weights_ho += weights_ho_deltas
+        ## Change the bias with the gradiant
+        #bias_o += outputGradiants
+
+        ## Calculate the hidden layer errors
+        #who_T = np.matrix.transpose(weights_ho)
+        #hiddenErrors = who_T * outputErrors
+
+        ## Hidden layer gradiant
+        #hiddenGradiants = hiddenOutput * ( 1 - hiddenOutput)
+        #hiddenGradiants = hiddenGradiants * hiddenErrors
+        #hiddenGradiants = hiddenGradiants * self.lr
+
+        ## Calculate deltas
+        #input_t = np.matrix.transpose(input)
+        #weights_ih_deltas = hiddenGradiants * input_t
+
+        ## change the weights by the deltas
+        #weights_ih += weights_ih_deltas
+        ## Change the bias with the gradiant
+        #bias_h += hiddenGradiants
+
+        #print (f"{self.weights_output[1]} \n {finalOutputs}")
+
+
+        #----------------------------------------------------------------------
+
+        # Reverse the lists
+        weights = self.weights[::-1] # ho, ih
+        weightsO = self.weights_output[::-1] # output, hidden, input 
+
+
+
+        firstItter = True
+        index = 0
+        for w, b, in zip (self.weights[::-1], self.biases[::-1]):
+
+            preWeight = weights[index - 1].T # Get the previous weights to change the next weights
+            wo = weightsO[index]    
+
+            if (firstItter == True):
+                Error = targetArray.T - wo
             else:
-                print ("Epoch {0} complete".format(j))
+                Error = preWeight * Error
+
+            gradiants = wo # self.activation_function(wo)
+            gradiants = gradiants * Error
+            gradiants = gradiants * self.lr
+
+            delta = gradiants * weightsO[index+1].T
+
+            # This is the thing that needs to change
+            w += delta
+            b += gradiants
+
+            firstItter = False
+
+            index += 1
+
+            
 
 
-    def backprop(self, x, y):
-        """Return a tuple "(nabla_b, nabla_w)" representing the
-        gradient for the cost function C_x.  "nabla_b" and
-        "nabla_w" are layer-by-layer lists of numpy arrays, similar
-        to "self.biases" and "self.weights"."""
-        nabla_b = [np.zeros(b.shape) for b in self.biases]
-        nabla_w = [np.zeros(w.shape) for w in self.weights]
-        # feedforward
-        activation = x
-        activations = [x] # list to store all the activations, layer by layer
-        zs = [] # list to store all the z vectors, layer by layer
-        for b, w in zip(self.biases, self.weights):
-            z = np.dot(w, activation)+b
-            zs.append(z)
-            activation = sigmoid(z)
-            activations.append(activation)
-        # backward pass
-        delta = self.cost_derivative(activations[-1], y) * \
-            sigmoid_prime(zs[-1])
-        nabla_b[-1] = delta
-        nabla_w[-1] = np.dot(delta, activations[-2].transpose())
-        # Note that the variable l in the loop below is used a little
-        # differently to the notation in Chapter 2 of the book.  Here,
-        # l = 1 means the last layer of neurons, l = 2 is the
-        # second-last layer, and so on.  It's a renumbering of the
-        # scheme in the book, used here to take advantage of the fact
-        # that Python can use negative indices in lists.
-        for l in range(2, self.num_layers):
-            z = zs[-l]
-            sp = sigmoid_prime(z)
-            delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
-            nabla_b[-l] = delta
-            nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
+            # Error = weight_Output[1] Error
 
-        print (len(nabla_b))
-        print (len(nabla_w))
+            #gradiant = weights[1]
 
-        self.biases += nabla_b
-        self.weights += nabla_w
+            #gradiant *= Error
+            #gradiant *= lr
 
-
-        pass
-
-
-    def train(self, mini_batch, eta):
-        """Update the network's weights and biases by applying
-        gradient descent using backpropagation to a single mini batch.
-        The "mini_batch" is a list of tuples "(x, y)", and "eta"
-        is the learning rate."""
-        nabla_b = [np.zeros(b.shape) for b in self.biases]
-        nabla_w = [np.zeros(w.shape) for w in self.weights]
-        for x, y in mini_batch:
-            delta_nabla_b, delta_nabla_w = self.backprop(x, y)
-            nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
-            nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
-        self.weights = [w-(eta/len(mini_batch))*nw
-                        for w, nw in zip(self.weights, nabla_w)]
-        self.biases = [b-(eta/len(mini_batch))*nb
-                       for b, nb in zip(self.biases, nabla_b)]
