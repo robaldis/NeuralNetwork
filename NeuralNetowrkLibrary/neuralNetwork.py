@@ -12,6 +12,9 @@ def matrixAdd(a, b):
 class NeuralNetwrok (object):
 
     def __init__(self,input_nodes,hidden_nodes, output_nodes,lr, oldBrain = None):
+        np.random.seed(1)
+        seed(1)
+
         self.input_nodes = input_nodes
         self.hidden_nodes = hidden_nodes
         self.output_nodes = output_nodes
@@ -42,6 +45,11 @@ class NeuralNetwrok (object):
 
         # activation function is the sigmoid function
         self.activation_function = lambda x: scipy.special.expit(x)
+
+        print (self.weights_ho)
+        print (self.weights_ih)
+        print (self.bias_h)
+        print (self.bias_o)
 
         pass
 

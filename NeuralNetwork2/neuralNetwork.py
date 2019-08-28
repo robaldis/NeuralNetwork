@@ -16,6 +16,8 @@ def sigmoid_prime(z):
 class NeuralNetwork():
 
     def __init__(self, layer_sizes):
+        np.random.seed(1)
+        random.seed(1)
         weight_shape = [(a,b) for a,b in zip(layer_sizes[1:], layer_sizes[:-1])]
         self.weights = [np.random.standard_normal(s)/s[1]**.5 for s in weight_shape]
         self.biases = [np.zeros((s,1)) for s in layer_sizes[1:]]
